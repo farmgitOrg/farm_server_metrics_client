@@ -190,10 +190,10 @@ async function get_server_info():Promise<ServerMetricsInterface>{
     }
 }
 
-const port = process.env.HTTP_PORT || 3000;
+const http_url = process.env.HTTP_URL || 'http://localhost:3000';
 // post the server info to the specified https server
 async function post_server_info(server_info: any){
-    const url = `http://localhost:${port}`;
+    const url = http_url;
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -207,12 +207,17 @@ async function post_server_info(server_info: any){
 
 async function main(){
     while (true) {
-        const server_info = await get_server_info();
-        console.log(server_info);
+        try{
+            const server_info = await get_server_info();
+            console.log(server_info);
 
-        post_server_info(server_info);
+            await post_server_info(server_info);
 
-        await sleep(10*60*1000); // 10 minutes
+        } catch (error) {
+            console.error(error);
+        } finally {
+            await sleep(10*60*1000); // 10 minutes
+        }
     }
 }
 

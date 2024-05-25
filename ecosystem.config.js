@@ -3,9 +3,9 @@ module.exports = {
         {
             name: `farm-server-metrics`,
             script: "ts-node",
-            args: 'src/index.ts',
+            args: 'src/client.ts',
             env: {
-                HTTP_SERVER: "xxxxx",
+                HTTP_URL: "https://xxx",
                 CLIENT_ID: ""
             }
         }
