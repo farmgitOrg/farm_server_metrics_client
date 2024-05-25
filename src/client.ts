@@ -206,6 +206,7 @@ async function post_server_info(server_info: any){
 }
 
 async function main(){
+    console.log("start")
     while (true) {
         try{
             const server_info = await get_server_info();
