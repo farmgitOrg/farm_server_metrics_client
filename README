@@ -1,0 +1,24 @@
+1. Link:
+    https://www.notion.so/c9147f3b1c5d4138a2371859d3508271
+
+2. 安装 node + pm2 环境：
+    sudo apt update
+    sudo apt upgrade
+    sudo apt install build-essential libssl-dev git
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+    source ~/.bashrc
+    nvm install v20.13.1
+    nvm use v20.13.1
+    npm install -g typescript ts-node pm2
+
+2. 下载客户端：
+    git clone https://github.com/farmgitOrg/farm_server_metrics_client.git
+    cd farm_server_metrics_client
+
+3. 修改 ecosystem.config.js配置
+    CLIENT_ID: “myserverid”,
+    HTTP_URL: “https://metrics.xxxxx.com”
+
+4. 启动
+    npm install
+    pm2 start
