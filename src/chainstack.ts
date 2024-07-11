@@ -49,7 +49,7 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
         await page.waitForSelector('#request-units-included', { timeout: 30000 });//#request-units-used
         console.log("wait for element done");
 
-        await page.screenshot({ path: 'debug.png', fullPage: true });
+        await page.screenshot({ path: 'debug_chainstack.png', fullPage: true });
         console.log("screenshot done");
 
         let includedUnits: any = await page.$eval('#request-units-included', (element:any) => element.textContent?.trim());
