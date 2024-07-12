@@ -1,0 +1,16 @@
+CHAINSTACK_USERNAME='m...'
+CHAINSTACK_PASSWORD='S...'
+
+QUICKNODE_USERNAME='mn...'
+QUICKNODE_PASSWORD='4...'
+QUICKNODE_EXPIRED=1933837532
+
+MAC_QUICKNODE_CF_CLEARANCE='f7BiK...'
+MAC_QUICKNODE_REFERER='https://auth.quicknode.com/interaction/UxiY7Sb...O97/login?__cf_...'
+
+DEBIAN_QUICKNODE_CF_CLEARANCE='QuLVyE0E...'
+DEBIAN_QUICKNODE_REFERER='https://auth.quicknode.com/interaction/YkGFeu..../login?__cf_chl_tk=.8XK3...'
+
+
+HTTP_URL="https://me..."
+CLIENT_ID="Z_quicknode"
