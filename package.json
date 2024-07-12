@@ -12,6 +12,8 @@
     "@types/node": "^20.12.12",
     "dotenv": "^16.4.5",
     "node": "^18.20.3",
-    "puppeteer": "^22.13.0"
+    "puppeteer": "^22.13.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
 }

@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { PartitionInterface, ServerMetricsInterface } from './ServerMetricsInterface';
 import puppeteer from 'puppeteer';
 
+
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -19,19 +20,28 @@ async function sleep(ms: number) {
 
 async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
 
+    ///usr/bin/google-chrome
     const browser = await puppeteer.launch({
         headless: false,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-javascript'],
+        ignoreHTTPSErrors: true, // 忽略 HTTPS 错误
     });
 
     const page = await browser.newPage();
 
     try {
 
-        await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36');
+        // 获取浏览器的 User-Agent
+        const userAgent = await browser.userAgent();
+        console.log('浏览器 User-Agent:', userAgent);
 
+        // await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+        // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+
+        await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36');
+        
         // 设置 Referer
-        const referer = process.env.QUICKNODE_REFERER!;
+        const referer = process.env.DEBIAN_QUICKNODE_REFERER!;
         await page.setExtraHTTPHeaders({
             'Referer': referer
         });
@@ -40,10 +50,10 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
         const cookies = [
             {
                 name: 'cf_clearance',
-                value: process.env.QUICKNODE_CF_CLEARANCE!,
+                value: process.env.DEBIAN_QUICKNODE_CF_CLEARANCE!,
                 domain: '.quicknode.com',
                 path: '/',
-                expires: process.env.QUICKNODE_EXPIRED!,
+                // expires: 'Sat, 12-Jul-25 01:54:28 GMT',
                 httpOnly: true,
                 secure: true,
                 sameSite: 'None'
@@ -83,7 +93,7 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
         console.log("screenshot done");
 
         // 获取元素的文本内容
-        const textContent = await page.$eval('.Text_text__2tXmb.text-standard.text-sm', element => element.textContent);
+        const textContent = await page.$eval('.Text_text__2tXmb.text-standard.text-sm', (element:any) => element.textContent);
 
        // 使用正则表达式匹配带小数点的数字
        //<div class="mt-2 Text_text__2tXmb text-standard text-sm"><span class="text-purple-700 dark:text-purple-200">230.5 M</span> / 500.9 M API credits used</div> 
@@ -93,9 +103,9 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
        let includedUnits: any;
        let usedUnits: any;
 
-       if (matches && matches.length === 3) {
-           const usedCredits = matches[1]; // 第一个匹配项是第一个数字 230.5
-           const totalCredits = matches[2]; // 第二个匹配项是第二个数字 500.9
+       if (matches && matches!.length === 3) {
+           const usedCredits = matches![1]; // 第一个匹配项是第一个数字 230.5
+           const totalCredits = matches![2]; // 第二个匹配项是第二个数字 500.9
            console.log('Used credits:', usedCredits);
            console.log('Total credits:', totalCredits);
            includedUnits = totalCredits;
