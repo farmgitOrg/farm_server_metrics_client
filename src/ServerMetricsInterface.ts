@@ -17,10 +17,11 @@ interface ServerMetricsInterface {
     mem_usage: number;
     ping_delay: number;
     partition_info: PartitionInterface;
+    msg?: string;
 }
 
 /*
-    {
+{
     host: 'ip-172-31-34-195',
     os: 'Debian GNU/Linux 12 (bookworm)',
     cpu_usage: 42.5,
@@ -33,5 +34,7 @@ interface ServerMetricsInterface {
         available: '181G',
         use: '26%',
         mounted: '/'
+    },
+    msg: 'balance: $50.00'
 }
 */

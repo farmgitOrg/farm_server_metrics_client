@@ -14,3 +14,6 @@ DEBIAN_QUICKNODE_REFERER='https://auth.quicknode.com/interaction/YkGFeu..../logi
 
 HTTP_URL="https://me..."
 CLIENT_ID="Z_quicknode"
+
+SMARTPROXY_USERNAME='ylt...'
+SMARTPROXY_PASSWORD='!...'
