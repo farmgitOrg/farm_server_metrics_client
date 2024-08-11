@@ -47,39 +47,47 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
         let selector = '#root > div > div.css-jbfx24.e1t2z1mw0 > div > div > div > div > div > div.css-1djwvw7 > div.css-169ngqy > form > div.css-16g1rm.e1t2z1mw0 > button'
         const button = await page.$(selector);
         button?.click();
-    
+
         // 等待导航到登录后的页面
         await page.waitForNavigation();
         await new Promise(resolve => setTimeout(resolve, 5000));
+                    
 
-        selector = '#regular-container > div.css-jbfx24.e1t2z1mw0 > div.css-gkyqc1 > nav > div.css-t4bttc.e1t2z1mw0 > div.css-1shzh9i.e1t2z1mw0 > div.css-19nhamx.eejyiav0 > div'
+        // 点击右上角，切换用户账号到gmail账号
+        // selector = '#regular-container > div.css-jbfx24.e1t2z1mw0 > div.css-gkyqc1 > nav > div.css-t4bttc.e1t2z1mw0 > div.css-1shzh9i.e1t2z1mw0 > div.css-19nhamx.eejyiav0 > div'
+        selector = '#regular-container > div.css-jbfx24.e1t2z1mw0 > div.css-gkyqc1 > nav > div.css-t4bttc.e1t2z1mw0 > div:nth-child(3) > div > div > div > div > div > div';
         const changeteam = await page.$(selector)
         
-        changeteam?.click();
+        changeteam?.click(); //点击右上角
         await new Promise(resolve => setTimeout(resolve, 5000));
 
-        selector = '#sp-popover-portal > div > div.css-ttgn3d.e1v01nwg0 > div > div:nth-child(3) > div > p'
+        // selector = '#sp-popover-portal > div > div.css-ttgn3d.e1v01nwg0 > div > div:nth-child(3) > div > p'
+        selector = '#sp-popover-portal > div > div.css-ttgn3d.e1v01nwg0 > div > div:nth-child(3)'
         const gmail = await page.$(selector)
-        gmail?.click();
+        gmail?.click(); // 点击gmail 账号
         await new Promise(resolve => setTimeout(resolve, 5000));
 
-        selector = '#root > div > div.css-1age63q > aside > div > div > div.css-irm92l.e17kt26d5 > div.css-dps9f6.e1t2z1mw0 > nav:nth-child(1) > ol > div > li > a > div > div.css-k8sa7m.e17kt26d19'
+        // 点击 subscription
+        // selector = '#root > div > div.css-1age63q > aside > div > div > div.css-irm92l.e17kt26d5 > div.css-dps9f6.e1t2z1mw0 > nav:nth-child(1) > ol > div > li > a > div > div.css-k8sa7m.e17kt26d19'
+        selector = `#root > div > div.css-1age63q > aside > div > div > div.css-irm92l.e17kt26d5 > div.css-dps9f6.e1t2z1mw0 > nav:nth-child(1) > ol > div > li > a`
         const subscription = await page.$(selector)
-        subscription?.click();
+        subscription?.click(); // 点击subscription
 
         // selector = '#main-content-container > div > div > div > div > div > div.css-19suhek.e1t2z1mw0 > div > div > div:nth-child(1) > div.css-1jedih6.e1t2z1mw0 > div.css-jbfx24.e1t2z1mw0 > div > p.css-gxj8xo.embmatf0'
         // await page.waitForSelector(selector);
         // console.log("wait selector done");
-
+// await new Promise(resolve => setTimeout(resolve, 5000));
         // 等待元素加载
-        await page.waitForSelector('.css-38vo43.embmatf0'); // 确保选择器正确
+        // await page.waitForSelector('.css-38vo43.embmatf0'); // 确保选择器正确
+        await page.waitForSelector('.css-38vo43.embmatf0'); // 确保选择器正确, "GB used"
 
         // 提取 2.77 的值
+        
         const usedGB = await page.$eval('.css-gxj8xo.embmatf0', el => {
             // console.log(el.textContent);
             return el.textContent?.trim().split(' ')[0]
         });
-        
+
         console.log("------")
         // 提取 8 的值
         const totalGB = await page.$eval('strong', el => {
