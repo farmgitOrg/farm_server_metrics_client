@@ -7,7 +7,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const loginUrl = 'https://www.quicknode.com/login';
-const targetUrl = 'https://console.chainstack.com/user/settings/billing';
+// const targetUrl = 'https://console.chainstack.com/user/settings/billing';
 const username = process.env.QUICKNODE_USERNAME!
 const password = process.env.QUICKNODE_PASSWORD!
 

@@ -50,7 +50,7 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
 
         // 等待导航到登录后的页面
         await page.waitForNavigation();
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 10000));
                     
 
         // 点击右上角，切换用户账号到gmail账号
@@ -59,7 +59,7 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
         const changeteam = await page.$(selector)
         
         changeteam?.click(); //点击右上角
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 10000));
 
         // selector = '#sp-popover-portal > div > div.css-ttgn3d.e1v01nwg0 > div > div:nth-child(3) > div > p'
         selector = '#sp-popover-portal > div > div.css-ttgn3d.e1v01nwg0 > div > div:nth-child(3)'
@@ -67,6 +67,8 @@ async function get_server_info(): Promise<ServerMetricsInterface|undefined> {
         gmail?.click(); // 点击gmail 账号
         await new Promise(resolve => setTimeout(resolve, 5000));
 
+        // #sp-popover-portal > div > div.css-ttgn3d.e1v01nwg0 > div > div:nth-child(3)
+        
         // 点击 subscription
         // selector = '#root > div > div.css-1age63q > aside > div > div > div.css-irm92l.e17kt26d5 > div.css-dps9f6.e1t2z1mw0 > nav:nth-child(1) > ol > div > li > a > div > div.css-k8sa7m.e17kt26d19'
         selector = `#root > div > div.css-1age63q > aside > div > div > div.css-irm92l.e17kt26d5 > div.css-dps9f6.e1t2z1mw0 > nav:nth-child(1) > ol > div > li > a`
