@@ -28,6 +28,7 @@ async function collectStatus(pre_data:any): Promise<any> {
   const cpuUsage = await si.currentLoad();
   const memoryUsage = await si.mem();
   const diskUsage = await si.fsSize();
+  const osInfo = await si.osInfo();
 //   console.log(diskUsage)
   const networkIO = await si.networkStats();
   let gpuUsage:any[] = [];
@@ -49,12 +50,18 @@ async function collectStatus(pre_data:any): Promise<any> {
     console.log("No GPU detected or failed to fetch GPU data.");
   }
 
+  const host_os = osInfo.distro;
+  const host_name = osInfo.hostname;
+
   return {
     timestamp: new Date().toISOString(),
-    cpuUsage: Math.round(cpuUsage.currentLoad),
-    avgCpuUsage: Math.round(cpuUsage.avgLoad),
-    memoryUsage: Math.round((memoryUsage.active / memoryUsage.total) * 100),
-    diskUsage: diskUsage
+    client_id: ENV_CLIENT_ID,
+    host_os: host_os,
+    host_name: host_name,
+    cpu_usage: Math.round(cpuUsage.currentLoad),
+    avg_cpu_usage: Math.round(cpuUsage.avgLoad),
+    mem_usage: Math.round((memoryUsage.active / memoryUsage.total) * 100),
+    disk_usage: diskUsage
         .filter(disk => 
             ENV_DISK_DEVICES.length === 0 ||
             (ENV_DISK_DEVICES.includes(disk.fs) || ENV_DISK_DEVICES.includes(disk.mount))
@@ -65,7 +72,7 @@ async function collectStatus(pre_data:any): Promise<any> {
             usedPercent: Math.round(disk.use)
             })
         ),
-    networkIO: networkIO
+    network_usage: networkIO
         .filter(net => 
             ENV_NET_DEVICES.length === 0 ||
             ENV_NET_DEVICES.includes(net.iface)
@@ -74,11 +81,34 @@ async function collectStatus(pre_data:any): Promise<any> {
         iface: net.iface,
         rxMBytes: Math.round(net.rx_bytes/1024/1024),
         txMBytes: Math.round(net.tx_bytes/1024/1024),
-        rxMBytesPerSec: Math.round(((net.rx_bytes/1024/1024 - (pre_data?.networkIO.find((d: any) => d.iface === net.iface)?.rxMBytes || net.rx_bytes/1024/1024) ))/(ENV_SAMPLE_INTERVAL_SEC)),
-        txMBytesPerSec: Math.round(((net.tx_bytes/1024/1024 - (pre_data?.networkIO.find((d: any) => d.iface === net.iface)?.txMBytes || net.tx_bytes/1024/1024) ))/(ENV_SAMPLE_INTERVAL_SEC)),
+        rxMBytesPerSec: Math.round(
+            (net.rx_bytes/1024/1024 - (pre_data?.network_usage.find((d: any) => d.iface === net.iface)?.rxMBytes || net.rx_bytes/1024/1024) )
+            /(ENV_SAMPLE_INTERVAL_SEC)
+        ),
+        txMBytesPerSec: Math.round(
+            (net.tx_bytes/1024/1024 - (pre_data?.network_usage.find((d: any) => d.iface === net.iface)?.txMBytes || net.tx_bytes/1024/1024) )
+            /(ENV_SAMPLE_INTERVAL_SEC)
+        ),
         })),
-    gpuUsage
+    gpu_usage: gpuUsage
   };
+}
+
+async function post_server_info(server_info: any){
+    try{
+        const url = ENV_HTTP_URL;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(server_info)
+        });
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error('Failed to post data:', error);
+    }
 }
 
 let prev_data:any = null;
@@ -88,15 +118,7 @@ async function main() {
         prev_data = data;
         console.log(data);
 
-        try {
-            const response = await axios.post(ENV_HTTP_URL, {
-                client_id: ENV_CLIENT_ID,
-                data: data
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error('Failed to post data:', error);
-        }
+        await post_server_info(data);
         await sleep(ENV_SAMPLE_INTERVAL_SEC*1000);
     }
 }
