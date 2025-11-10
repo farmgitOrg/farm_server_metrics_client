@@ -21,4 +21,5 @@
 
 4. 启动
     npm install
+    pm2 install logrotate
     pm2 start
