@@ -2,7 +2,7 @@ module.exports = {
     apps: [
         {
             name: `farm-server-metrics`,
-            script: "ts-node",
+            script: "node_modules/.bin/tsx",
             args: 'src/client_si.ts',
             log_date_format: "YYYY-MM-DD HH:mm:ss.SSS",
             env: {
