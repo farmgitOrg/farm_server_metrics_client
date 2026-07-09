@@ -108,7 +108,8 @@ async function collectStatus(pre_data:any): Promise<any> {
 
 async function post_server_info(server_info: any){
     try{
-        const url = ENV_HTTP_URL;
+        const base = ENV_HTTP_URL.replace(/\/+$/, '');
+        const url = base.endsWith('/v2') ? base : `${base}/v2`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
