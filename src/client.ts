@@ -171,13 +171,8 @@ async function get_server_info():Promise<ServerMetricsInterface>{
 
     const host_os = await get_host_os();
     const host_name = await get_host_name();
-    // const host_ip = await get_host_ip();
+    const host_ip = await get_host_ip();
     const host = `${host_name}`;
-
-    // console.log(partition);
-    // console.log(memory_usage);
-    // console.log(cpu_usage);
-    // console.log(ping_delay);
 
     return {
         client_id: process.env.CLIENT_ID || '',
@@ -186,7 +181,8 @@ async function get_server_info():Promise<ServerMetricsInterface>{
         cpu_usage: cpu_usage,
         mem_usage: memory_usage,
         ping_delay: ping_delay,
-        partition_info: partition
+        partition_info: partition,
+        host_ip: host_ip
     }
 }
 

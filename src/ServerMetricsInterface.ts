@@ -17,6 +17,7 @@ interface ServerMetricsInterface {
     mem_usage: number;
     ping_delay: number;
     partition_info: PartitionInterface;
+    host_ip?: string;
     msg?: string;
 }
 

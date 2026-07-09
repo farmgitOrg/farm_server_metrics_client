@@ -52,12 +52,17 @@ async function collectStatus(pre_data:any): Promise<any> {
 
   const host_os = osInfo.distro;
   const host_name = osInfo.hostname;
+  const networkIfaces = await si.networkInterfaces();
+  const ifaceList = Array.isArray(networkIfaces) ? networkIfaces : [networkIfaces];
+  const primaryIface = ifaceList.find((iface: any) => !iface.internal && iface.ip4 && iface.ip4 !== '');
+  const host_ip = primaryIface ? primaryIface.ip4 : '';
 
   return {
     timestamp: new Date().toISOString(),
     client_id: ENV_CLIENT_ID,
     host_os: host_os,
     host_name: host_name,
+    host_ip: host_ip,
     cpu_usage: Math.round(cpuUsage.currentLoad),
     avg_cpu_usage: Math.round(cpuUsage.avgLoad),
     mem_usage: Math.round((memoryUsage.active / memoryUsage.total) * 100),
