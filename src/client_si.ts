@@ -78,7 +78,10 @@ async function collectStatus(pre_data:any): Promise<any> {
     avg_cpu_usage: Math.round(cpuUsage.avgLoad),
     mem_usage: Math.round((memoryUsage.active / memoryUsage.total) * 100),
     disk_usage: diskUsage
-        .filter(disk => 
+        .filter(disk =>
+            disk.fs !== 'overlay' && disk.fs !== 'tmpfs' && !disk.fs.startsWith('shm')
+        )
+        .filter(disk =>
             ENV_DISK_DEVICES.length === 0 ||
             (ENV_DISK_DEVICES.includes(disk.fs) || ENV_DISK_DEVICES.includes(disk.mount))
         )
@@ -111,6 +114,10 @@ async function collectStatus(pre_data:any): Promise<any> {
 }
 
 async function post_server_info(server_info: any){
+    if (!ENV_HTTP_URL) {
+        console.warn('HTTP_URL not set, skipping post');
+        return;
+    }
     try{
         const base = ENV_HTTP_URL.replace(/\/+$/, '');
         const url = base.endsWith('/v2') ? base : `${base}/v2`;
