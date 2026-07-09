@@ -172,7 +172,7 @@ async function get_server_info():Promise<ServerMetricsInterface>{
 
     const host_os = await get_host_os();
     const host_name = await get_host_name();
-    const host_ip = await get_host_ip();
+    const host_ip = (process.env.HOST_IP || '').trim() || await get_host_ip();
     const host = `${host_name}`;
 
     return {
