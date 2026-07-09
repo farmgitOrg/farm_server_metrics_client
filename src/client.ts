@@ -133,7 +133,8 @@ async function get_host_ip():Promise<string>{
                 console.error(err);
                 return;
             }
-            resolve(stdout.trim());
+            // hostname -I returns all non-loopback IPs space-separated; first is the primary one
+            resolve(stdout.trim().split(/\s+/)[0] || '');
         });
     });
 }

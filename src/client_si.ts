@@ -54,7 +54,14 @@ async function collectStatus(pre_data:any): Promise<any> {
   const host_name = osInfo.hostname;
   const networkIfaces = await si.networkInterfaces();
   const ifaceList = Array.isArray(networkIfaces) ? networkIfaces : [networkIfaces];
-  const primaryIface = ifaceList.find((iface: any) => !iface.internal && iface.ip4 && iface.ip4 !== '');
+  const virtualIfacePattern = /^(docker|br-|virbr|veth|tun|tap)/;
+  const primaryIface = ifaceList.find((iface: any) =>
+    !iface.internal &&
+    !iface.virtual &&
+    iface.ip4 &&
+    iface.ip4 !== '' &&
+    !virtualIfacePattern.test(iface.iface)
+  );
   const host_ip = primaryIface ? primaryIface.ip4 : '';
 
   return {
