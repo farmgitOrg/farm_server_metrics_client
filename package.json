@@ -16,6 +16,7 @@
     "puppeteer": "^22.13.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "systeminformation": "^5.25.11"
+    "systeminformation": "^5.25.11",
+    "tsx": "^4.23.0"
   }
 }
