@@ -58,14 +58,18 @@ async function collectStatus(pre_data:any): Promise<any> {
     const networkIfaces = await si.networkInterfaces();
     const ifaceList = Array.isArray(networkIfaces) ? networkIfaces : [networkIfaces];
     const virtualIfacePattern = /^(docker|br-|virbr|veth|tun|tap)/;
-    const primaryIface = ifaceList.find((iface: any) =>
+    const isPrivate = (ip: string) =>
+      /^10\./.test(ip) || /^172\.(1[6-9]|2\d|3[01])\./.test(ip) || /^192\.168\./.test(ip);
+    const realIfaces = ifaceList.filter((iface: any) =>
       !iface.internal &&
       !iface.virtual &&
       iface.ip4 &&
       iface.ip4 !== '' &&
       !virtualIfacePattern.test(iface.iface)
     );
-    host_ip = primaryIface ? primaryIface.ip4 : '';
+    // prefer public IP; fall back to first private IP
+    const picked = realIfaces.find((iface: any) => !isPrivate(iface.ip4)) ?? realIfaces[0];
+    host_ip = picked ? picked.ip4 : '';
   }
 
   return {
